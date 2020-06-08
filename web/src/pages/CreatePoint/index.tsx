@@ -85,7 +85,7 @@ const CreatePoint = () => {
       event.latlng.lat,
       event.latlng.lng,
     ])
-  }
+  };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -104,7 +104,7 @@ const CreatePoint = () => {
     } else {
       setSelectedItems([ ...selectedItems, id ]);
     }
-  }
+  };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
