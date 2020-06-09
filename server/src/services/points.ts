@@ -2,20 +2,23 @@ import knex from '../db/connection';
 import { isEmpty } from 'ramda';
 
 const postPoints = async ({
-  name, email, whatsapp, latitude, longitude, city, uf, items,
+  name, email, whatsapp, latitude, longitude, city, uf, items, image
 }) => {
   const trx = await knex.transaction();;
   const upperUF = uf.toUpperCase();
 
   const createPoint = await trx('points').insert({
-    image: 'image', name, email, whatsapp, latitude, longitude, city, uf: upperUF,
+    image, name, email, whatsapp, latitude, longitude, city, uf: upperUF,
   })
   const point_id = createPoint[0];
-  const pointItems = items.map((item_id: number) => {
-    return {
-      item_id,
-      point_id,
-    }
+  const pointItems = items
+    .split(',')
+    .map((item: string) => Number(item.trim()))
+    .map((item_id: number) => {
+      return {
+        item_id,
+        point_id,
+      }
   });
 
   await trx('point_items').insert(pointItems);
@@ -34,12 +37,18 @@ const getPointId = async ({ id }) => {
     .where('id', id).first();
   if (!point) {
     return 'Point Id Not Found';
-  }
+  };
+
+  const serializedPoint = {
+      ...point,
+      image_url: `http://192.168.15.11:3001/uploads/${point.image}`
+  };
+
   const items = await knex('items')
     .join('point_items', 'items.id', '=', 'point_items.item_id')
     .where('point_items.point_id', id);
 
-  return { point, items };
+  return { point: serializedPoint, items };
 }
 
 const getAllPoints = async () => (
@@ -47,10 +56,8 @@ const getAllPoints = async () => (
 );
 
 const getFilteredPoints = async (filter) => {
-  console.log(filter)
   const { city, uf, items } = filter;
   const parsedItems = String(items).split(',').map((item) => Number(item.trim()));
-  console.log(city)
   const filteredPoints = await knex('points')
     .join('point_items', 'points.id', '=', 'point_items.point_id')
     .modify((queryFunction) => {
@@ -64,8 +71,15 @@ const getFilteredPoints = async (filter) => {
     })
     .distinct()
     .select('points.*')
+  
+  const serializedPoints = filteredPoints.map((point) => {
+    return {
+      ...point,
+      image_url: `http://192.168.15.11:3001/uploads/${point.image}`
+    }
+  });
 
-    return filteredPoints;
+  return serializedPoints;
 }
 
 const getPoints = async (filter: Object) => {

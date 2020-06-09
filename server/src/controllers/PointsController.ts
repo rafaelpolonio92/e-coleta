@@ -2,11 +2,13 @@ import { getPointId, postPoints, getPoints, } from '../services/points';
 
 const postPoint = async (req, res) => {
   const {
-    name, email, whatsapp, latitude, longitude, city, uf, items,
+    name, email, whatsapp, latitude, longitude, city, uf, items, 
   } = req.body
 
+  const image = req.file.filename;
+
   const newPoint = await postPoints({
-    name, email, whatsapp, latitude, longitude, city, uf, items,
+    name, email, whatsapp, latitude, longitude, city, uf, items, image
   })
   return res.status(200).json(newPoint)
 };
