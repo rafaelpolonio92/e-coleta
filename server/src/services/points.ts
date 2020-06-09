@@ -42,7 +42,7 @@ const getPointId = async ({ id }) => {
 
   const serializedPoint = {
       ...point,
-      image_url: `http://192.168.15.11:3001/uploads/${point.image}`
+      image_url: `${process.env.NEW_URL}/uploads/${point.image}`
   };
 
   const items = await knex('items')
@@ -76,7 +76,7 @@ const getFilteredPoints = async (filter) => {
   const serializedPoints = filteredPoints.map((point) => {
     return {
       ...point,
-      image_url: `http://192.168.15.11:3001/uploads/${point.image}`
+      image_url: `${process.env.NEW_URL}/uploads/${point.image}`
     }
   });
 

@@ -6,7 +6,7 @@ const getItems = async () => {
     return {
       id: item.id,
       title: item.title,
-      image_url: `http://192.168.15.11:3001/uploads/${item.image}`
+      image_url: `${process.env.NEW_URL}/uploads/${item.image}`
     }
   })
   return serializedItems;

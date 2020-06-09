@@ -3,6 +3,7 @@ import routes from './routes';
 import path from 'path';
 import cors from 'cors';
 
+require('dotenv').config();
 const app = express();
 app.use(cors());
 app.use(express.json());
