@@ -4,6 +4,7 @@ import { isEmpty } from 'ramda';
 const postPoints = async ({
   name, email, whatsapp, latitude, longitude, city, uf, items, image
 }) => {
+  console.log(name);
   const trx = await knex.transaction();;
   const upperUF = uf.toUpperCase();
 
