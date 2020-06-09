@@ -43,8 +43,9 @@ const Points = () => {
         latitude,
         longitude,
       ])
-
     }
+
+    loadPosition();
   });
 
   useEffect(() => {
